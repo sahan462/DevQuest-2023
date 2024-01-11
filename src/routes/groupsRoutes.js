@@ -90,12 +90,18 @@ router.put('/:projectId/updateProjectStatus', async (req, res) => {
   });
 
 // Implement the route method for updateTaskStatus in challenge 15 here
-//
-//
-//
-//
-//
-//
+router.put('/:taskId/updateTaskStatus', async (req, res) => {
+    try {
+      const taskId = req.params.taskId;
+      const { status } = req.body;
+  
+      const response = await groupService.updateTaskStatusReq(taskId, status);
+      res.status(response.status).json(response);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
 router.post("/addNewProject", async (req, res) => {
     const data = req.body;

@@ -76,11 +76,15 @@ async function updateProjectStatusReq(projectId, status) {
 }
 
 // Implement the method updateTaskStatusReq(taskId, status) for challenge 15 here
-//
-//
-//
-//
-//
+async function updateTaskStatusReq(taskId, status) {
+  try {
+    const response = await groupRepository.updateTaskStatus(taskId, status);
+    return { response: response, status: httpStatus.OK };
+  } catch (error) {
+    console.error(error);
+    return { response: error.message, status: httpStatus.INTERNAL_SERVER_ERROR };
+  }
+}
 
 async function addNewProjectReq(projectDetails) {
   const response = await groupRepository.addNewProject(projectDetails);
@@ -163,5 +167,6 @@ export default {
   getGroupsFromUser,
   updateProjectReq,
   updateTaskReq,
-  updateProjectStatusReq
+  updateProjectStatusReq,
+  updateTaskStatusReq
 };
