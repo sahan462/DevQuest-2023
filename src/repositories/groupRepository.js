@@ -173,10 +173,32 @@ async function addNewGroup(data) {
 
 // Implement this method for Challenge 6
 async function addUserToGroup(data) {
+  try {
+    await knex_db('userGroups').insert({
+      user_id: data.user_id,
+      group_id: data.group_id,
+    });
+
+    return { status: 200, message: 'success' };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 // Implement this method for challenge 6
 async function getGroupsFromUser(userId) {
+  try {
+    const groups = await knex_db('userGroups')
+      .select('groups.*')
+      .join('groups', 'userGroups.group_id', '=', 'groups.id')
+      .where('userGroups.user_id', '=', userId);
+
+    return groups;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 function parseGroupsData(data) {
