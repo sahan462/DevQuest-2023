@@ -8,12 +8,9 @@ function init(db) {
 }
 
 // Implement this method for Challenge 7
-// async function getWhiteBoardDataByGroup(group_id) {
-// }
 
 // Implement this method for Challenge 7
-// async function addWhiteBoardData(data) {
-// }
+  
 
 function parseWhiteBoardData(data) {
     return data.map(item => {
@@ -24,5 +21,5 @@ function parseWhiteBoardData(data) {
 
 export default {
     init,
-    parseWhiteBoardData
+    parseWhiteBoardData,
 };

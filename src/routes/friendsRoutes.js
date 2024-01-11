@@ -1,4 +1,5 @@
 import express from "express";
+import httpStatus from "../enums/httpStatus.js";
 import friendsService from "../services/friendsService.js";
 import HttpStatus from "../enums/httpStatus.js";
 const router = express.Router();
@@ -78,6 +79,7 @@ router.delete("/:id/remove-friend", async (req, res) => {
   const id = req.params.id;
   const response = await friendsService.removeFriend(id);
   res.status(response.status).json(response);
+
 });
 
 router.delete("/:id/cancel-request", async (req, res) => {

@@ -2,6 +2,7 @@ import knex from "knex";
 import knex_db from "../../db/db-config.js";
 import userRepository from "./userRepository.js";
 import httpStatus from "../enums/httpStatus.js";
+import { raw } from "express";
 
 let _db;
 function init(db) {
@@ -116,17 +117,43 @@ async function rejectReq(id) {
   });
 }
 
-async function cancelReq(id) {
-  return new Promise((resolve, reject) => {
-    resolve("Request cancelled successfully!");
-  });
+async function isPendingRequest(id) {
+  const result = await knex_db('friends').where({ id, status: 'pending' });
+  return result.length > 0;
 }
 
-async function removeFriend(id) {
-  return new Promise((resolve, reject) => {
-    resolve("Friend removed successfully!");
-  });
+async function cancelReq(id) {
+    try {
+      const result = await knex_db.raw("SELECT * FROM friends WHERE id = ? AND status = 'PENDING'", [id]);
+      if(result.length > 0) {
+        await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
+        return "Request cancelled successfully!";
+      }
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
 }
+async function removeFriend(id) {
+
+  const row = await knex_db.raw("SELECT * FROM friends WHERE id = ?", [id]);
+  if(row.length === 1){
+    try {
+      await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
+      return "Friend removed successfully!";
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }else{
+      return "Friend not found!";
+  }
+
+}
+
+
+
 
 //Update this method to complete the challenge4.a
 async function viewFriends(id) {
@@ -181,7 +208,7 @@ async function getPeopleFromKeyword(id, keyword, pageNumber) {
   });
 }
 
-export default {
+module.exports = {
   init,
   getSuggestedFriends,
   sendReq,
@@ -193,5 +220,5 @@ export default {
   cancelReq,
   removeFriend,
   viewFriends,
-  getPeopleFromKeyword,
+  getPeopleFromKeyword
 };

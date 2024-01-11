@@ -24,13 +24,7 @@ async function getDocById(doc_id) {
     return { response: response, status: httpStatus.OK };
 }
 
-// Implement this method for Challenge 7
-// async function getWhiteBoardDataByGroup(group_id) {
-// }
 
-// Implement this method for Challenge 7
-// async function addWhiteBoardData(data) {
-// }
 
 // Implement this method for Challenge 8
 // async function addNewDoc(data) {

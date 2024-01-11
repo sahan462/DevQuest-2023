@@ -63,7 +63,11 @@ async function cancelReq(id) {
 
 async function removeFriend(id) {
   const response = await friendsRepository.removeFriend(id);
-  return { response: response, status: httpStatus.OK };
+  if(response === "Friend removed successfully!"){
+    return { response: response, status: httpStatus.OK };
+  }else{
+    return { response: response, status: httpStatus.NOT_FOUND };
+  }
 }
 
 async function viewFriends(id) {
