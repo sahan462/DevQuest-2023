@@ -117,10 +117,6 @@ async function rejectReq(id) {
   });
 }
 
-async function isPendingRequest(id) {
-  const result = await knex_db('friends').where({ id, status: 'pending' });
-  return result.length > 0;
-}
 
 async function cancelReq(id) {
     try {
@@ -128,6 +124,8 @@ async function cancelReq(id) {
       if(result.length > 0) {
         await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
         return "Request cancelled successfully!";
+      }else{
+        return "Request not found!";
       }
 
     } catch (error) {
@@ -135,20 +133,23 @@ async function cancelReq(id) {
       throw error;
     }
 }
-async function removeFriend(id) {
 
-  const row = await knex_db.raw("SELECT * FROM friends WHERE id = ?", [id]);
-  if(row.length === 1){
+
+async function removeFriend(id) {
     try {
-      await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
-      return "Friend removed successfully!";
+      const result = await knex_db.raw("SELECT * FROM friends WHERE id = ?", [id]);
+      if(result.length > 0){
+        await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
+        return "Friend removed successfully!";
+      }else{
+        return "Friend not found!";
+      }
+
     } catch (error) {
       console.error(error);
       throw error;
     }
-  }else{
-      return "Friend not found!";
-  }
+
 
 }
 
@@ -208,7 +209,7 @@ async function getPeopleFromKeyword(id, keyword, pageNumber) {
   });
 }
 
-module.exports = {
+export default {
   init,
   getSuggestedFriends,
   sendReq,
