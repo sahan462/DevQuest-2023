@@ -76,12 +76,18 @@ router.get('/:projectId/project', async (req, res) => {
 });
 
 // Implement the route method for updateProjectStatus in challenge 14 here
-//
-//
-//
-//
-//
-//
+router.put('/:projectId/updateProjectStatus', async (req, res) => {
+    try {
+      const projectId = req.params.projectId;
+      const { status } = req.body;
+  
+      const response = await groupService.updateProjectStatusReq(projectId, status);
+      res.status(response.status).json(response);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
 // Implement the route method for updateTaskStatus in challenge 15 here
 //
