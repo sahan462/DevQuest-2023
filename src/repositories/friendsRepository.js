@@ -188,8 +188,41 @@ async function removeFriend(id) {
 
 //Update this method to complete the challenge4.a
 async function viewFriends(id) {
-  let friends = [];
-  return friends;
+  
+    try {
+    const friendsData = await knex_db.raw(
+      `
+      SELECT u.id, f.id AS reqId
+      FROM friends f
+      JOIN users u ON (f.sender_id = u.id OR f.recipient_id = u.id) AND u.id <> ?
+      WHERE (f.sender_id = ? OR f.recipient_id = ?) AND f.status = 'ACCEPTED'
+      `,
+      [id, id, id]
+    );
+
+    const friendList = [];
+
+    for (const friend of friendsData) {
+      const user = await userRepository.getUser(friend.id);
+
+      friendList.push({
+        id: user.id,
+        email: user.email,
+        gender: user.gender,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        image_url: user.image_url,
+        hobbies: user.hobbies,
+        skills: user.skills,
+        reqId: friend.reqId,
+      });
+    }
+
+    return friendList;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 async function getPeopleFromKeyword(id, keyword, pageNumber) {

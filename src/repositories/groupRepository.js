@@ -135,10 +135,40 @@ async function getProjectById(projectId) {
 
 // Implement this method for Challenge 5
 async function getGroupsFromKeyword(keyword) {
+  try {
+    const groups = await knex_db.raw(
+      `
+      SELECT *
+      FROM groups
+      WHERE name LIKE ?
+      `,
+      [`%${keyword}%`]
+    );
+
+    return groups;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 // Implement this method for Challenge 5
 async function addNewGroup(data) {
+  try {
+    const [GroupId] = await knex_db.raw(
+      `
+      INSERT INTO groups (name, description, hobbies, capacity)
+      VALUES (?, ?, ?, ?)
+      RETURNING id;
+      `,
+      [data.group_name, data.group_desc, 'hobbies' in data && Array.isArray(data.hobbies) ? JSON.stringify(data.hobbies) : JSON.stringify([]), 'capacity' in data ? data.capacity : 0]
+    );
+
+    return GroupId && GroupId.length > 0 ? GroupId[0].id : null;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 // Implement this method for Challenge 6
