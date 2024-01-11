@@ -130,7 +130,23 @@ async function addNewProject(projectDetails) {
 
 // Implement this method body for challenge 11
 async function addNewTask(taskDetails) {
+  try {
+    await knex_db('tasks').insert({
+      name: taskDetails.name,
+      description: taskDetails.taskDescription,
+      assigneeId: taskDetails.assignee,
+      reporterId: taskDetails.reporter,
+      createdDate: taskDetails.createdDate,
+      dueDate: taskDetails.dueDate,
+      projectId: taskDetails.projectId,
+      taskStatus: taskDetails.taskStatus,
+    });
 
+    return 'success';
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 // Implement this method for challenge 12
