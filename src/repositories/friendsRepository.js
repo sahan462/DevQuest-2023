@@ -2,6 +2,7 @@ import knex from "knex";
 import knex_db from "../../db/db-config.js";
 import userRepository from "./userRepository.js";
 import httpStatus from "../enums/httpStatus.js";
+import { raw } from "express";
 
 let _db;
 function init(db) {
@@ -174,47 +175,44 @@ async function rejectReq(id) {
   });
 }
 
+
 async function cancelReq(id) {
-  return new Promise((resolve, reject) => {
-    knex_db
-      .raw("SELECT status FROM friends WHERE id = ?", [id])
-      .then((result) => {
-        if (result[0].status === "PENDING") {
-          knex_db
-            .raw("DELETE FROM friends WHERE id = ?", [id])
-            .then(() => {
-              resolve("Request cancelled successfully!");
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        } else {
-          resolve("Request not found!");
-        }
-      });
-  });
+    try {
+      const result = await knex_db.raw("SELECT * FROM friends WHERE id = ? AND status = 'PENDING'", [id]);
+      if(result.length > 0) {
+        await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
+        return "Request cancelled successfully!";
+      }else{
+        return "Request not found!";
+      }
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
 }
 
+
 async function removeFriend(id) {
-  return new Promise((resolve, reject) => {
-    knex_db
-      .raw("SELECT status FROM friends WHERE id = ?", [id])
-      .then((result) => {
-        if (result[0].status === "ACCEPTED") {
-          knex_db
-            .raw("DELETE FROM friends WHERE id = ?", [id])
-            .then(() => {
-              resolve("Friend removed successfully!");
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        } else {
-          resolve("Friend not found!");
-        }
-      });
-  });
+    try {
+      const result = await knex_db.raw("SELECT * FROM friends WHERE id = ?", [id]);
+      if(result.length > 0){
+        await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
+        return "Friend removed successfully!";
+      }else{
+        return "Friend not found!";
+      }
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+
+
 }
+
+
+
 
 //Update this method to complete the challenge4.a
 async function viewFriends(id) {
@@ -280,5 +278,5 @@ export default {
   cancelReq,
   removeFriend,
   viewFriends,
-  getPeopleFromKeyword,
+  getPeopleFromKeyword
 };

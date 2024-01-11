@@ -53,7 +53,5 @@ function parseWhiteBoardData(data) {
 
 export default {
     init,
-    parseWhiteBoardData,
-    addWhiteBoardData,
-    getWhiteBoardDataByGroup
+    parseWhiteBoardData
 };
