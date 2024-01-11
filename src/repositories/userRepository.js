@@ -11,7 +11,68 @@ function init(db) {
 
 // Update this method to get all users method in challenge1.a
 async function getUsers() {
-  return [];
+  return new Promise((resolve, reject) => {
+    knex_db
+      .raw(
+        'select * from users'
+      )
+      .then((result) => {
+        const rows = result;
+        let hobbyExist, skillExist;
+
+        if (rows.length === 0) {
+          resolve("User not found!");
+          return;
+        }
+
+        const user = {
+          id: rows[0].id,
+          email: rows[0].email,
+          gender: rows[0].gender,
+          image_url: rows[0].image_url,
+          hobbies: [],
+          skills: [],
+        };
+
+        rows.forEach((row) => {
+          hobbyExist = false;
+          if (row.hobbyName && row.hobbyRate) {
+            user.hobbies.map((hobby) => {
+              if (hobby.name === row.hobbyName) {
+                hobbyExist = true;
+              }
+            });
+            if (!hobbyExist) {
+              user.hobbies.push({
+                name: row.hobbyName,
+                rate: row.hobbyRate,
+              });
+            }
+          }
+
+          hobbyExist = false;
+          if (row.skillName && row.skillRate) {
+            user.skills.map((skill) => {
+              if (skill.name === row.skillName) {
+                skillExist = true;
+              }
+            });
+            if (!skillExist) {
+              user.skills.push({
+                name: row.skillName,
+                rate: row.skillRate,
+              });
+            }
+          }
+        });
+
+        resolve(user);
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
 }
 
 //Update this method to complete challenge0.c and challenge1.b
