@@ -9,9 +9,7 @@ function init(db) {
 }
 
 // Implement the method body for challenge 8
-async function getGroupsOfUser(userid) {
-
-}
+async function getGroupsOfUser(userid) {}
 
 async function getProjectsOfGroup(groupId) {
   return new Promise((resolve, reject) => {
@@ -70,6 +68,8 @@ async function getUsersOfGroups(groupId) {
       .raw(
         ` SELECT 
         ut.id,
+        ut.firstname,
+        ut.lastname,
         ut.email,
         ut.image_url 
         FROM users ut
@@ -89,34 +89,22 @@ async function getUsersOfGroups(groupId) {
 }
 
 // Implement this method body for challenge 10
-async function addNewProject(projectDetails) {
-
-}
+async function addNewProject(projectDetails) {}
 
 // Implement this method body for challenge 11
-async function addNewTask(taskDetails) {
-
-}
+async function addNewTask(taskDetails) {}
 
 // Implement this method for challenge 12
-async function updateProject(details, projectId) {
-
-}
+async function updateProject(details, projectId) {}
 
 // Implement this method for challenge 13
-async function updateTask(details, taskId) {
-
-}
+async function updateTask(details, taskId) {}
 
 // Implement this method for challenge 14
-async function updateProjectStatus(projectId, status) {
-
-}
+async function updateProjectStatus(projectId, status) {}
 
 // Implement this method for challenge 15
-async function updateTaskStatus(taskId, status) {
-
-}
+async function updateTaskStatus(taskId, status) {}
 
 async function getProjectById(projectId) {
   return new Promise((resolve, reject) => {
@@ -131,7 +119,6 @@ async function getProjectById(projectId) {
       });
   });
 }
-
 
 // Implement this method for Challenge 5
 async function getGroupsFromKeyword(keyword) {
@@ -161,7 +148,14 @@ async function addNewGroup(data) {
       VALUES (?, ?, ?, ?)
       RETURNING id;
       `,
-      [data.group_name, data.group_desc, 'hobbies' in data && Array.isArray(data.hobbies) ? JSON.stringify(data.hobbies) : JSON.stringify([]), 'capacity' in data ? data.capacity : 0]
+      [
+        data.group_name,
+        data.group_desc,
+        "hobbies" in data && Array.isArray(data.hobbies)
+          ? JSON.stringify(data.hobbies)
+          : JSON.stringify([]),
+        "capacity" in data ? data.capacity : 0,
+      ]
     );
 
     return GroupId && GroupId.length > 0 ? GroupId[0].id : null;
@@ -172,16 +166,20 @@ async function addNewGroup(data) {
 }
 
 // Implement this method for Challenge 6
-async function addUserToGroup(data) {
-}
+async function addUserToGroup(data) {}
 
 // Implement this method for challenge 6
-async function getGroupsFromUser(userId) {
-}
+async function getGroupsFromUser(userId) {}
 
 function parseGroupsData(data) {
-  return data.map(item => {
-    return new Group(item.id, item.name, item.description, JSON.parse(item.hobbies), item.capacity)
+  return data.map((item) => {
+    return new Group(
+      item.id,
+      item.name,
+      item.description,
+      JSON.parse(item.hobbies),
+      item.capacity
+    );
   });
 }
 
@@ -202,5 +200,5 @@ export default {
   getGroupsFromUser,
   addUserToGroup,
   getGroupsFromKeyword,
-  addNewGroup
+  addNewGroup,
 };
