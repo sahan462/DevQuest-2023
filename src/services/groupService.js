@@ -84,14 +84,31 @@ async function addNewTaskReq(taskDetails) {
   return { response: response, status: httpStatus.OK };
 }
 // Implement this method for Challenge 5
-// async function getGroupsFromKeyword(keyword) {
-
-// }
+async function getGroupsFromKeyword(keyword) {
+  try {
+    const response = await groupRepository.getGroupsFromKeyword(keyword);
+    return { response: response, status: httpStatus.OK };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 // Implement this method for Challenge 5
-// async function addNewGroup(data) {
+async function addNewGroup(data) {
+  try {
+    const response = await groupRepository.addNewGroup(data);
 
-// }
+    if (response) {
+      return { response: response, status: httpStatus.OK };
+    } else {
+      return { response: response, status: httpStatus.INTERNAL_SERVER_ERROR };
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 // Implement this method for Challenge 6
 // async function addUserToGroup(data) {
@@ -115,4 +132,6 @@ export default {
   getProjectByIdReq,
   addNewProjectReq,
   addNewTaskReq,
+  getGroupsFromKeyword,
+  addNewGroup
 };

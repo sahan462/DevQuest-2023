@@ -93,7 +93,7 @@ router.post("/addNewTask", async (req, res) => {
 
 router.get('/keywordsearch/:keyword', async (req, res) => {
     let keyword = req.params.keyword;
-    const groupSearchFilter = await groupService.getUserGroupsByKeyword(keyword);
+    const groupSearchFilter = await groupService.getGroupsFromKeyword(keyword);
     res.send(groupSearchFilter);
 });
 
