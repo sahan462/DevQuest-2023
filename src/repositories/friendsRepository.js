@@ -38,11 +38,12 @@ async function sendReq(data) {
                 return;
               } else {
                 knex_db
-                  .raw("UPDATE friends SET status = 'PENDING' WHERE id = ?", [
-                    1,
-                  ])
+                  .raw(
+                    "INSERT INTO friends (sender_id, recipient_id, status) VALUES (?, ?, 'PENDING')",
+                    [sender_id, recipient_id]
+                  )
                   .then(() => {
-                    resolve("");
+                    resolve("success");
                   })
                   .catch((error) => {
                     reject(error);
@@ -66,23 +67,80 @@ async function getPeopleYouMayKnow(id) {
 
 //Update this method to view the users to whom the requests were sent and complete challenge3.d
 async function viewSentReqs(id) {
-  let reqSentUsers = [];
-  return reqSentUsers;
+  let reqSendUsers = [];
+  try {
+    let requests = await knex_db.raw(
+      "SELECT id, recipient_id FROM friends WHERE sender_id = ? AND status = 'PENDING'",
+      [id]
+    );
+
+    for (const request of requests) {
+      const user = await userRepository.getUser(request.recipient_id);
+      reqSendUsers.push({
+        id: user.id,
+        email: user.email,
+        gender: user.gender,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        image_url: user.image_url,
+        hobbies: user.hobbies,
+        skills: user.skills,
+        reqId: request.id,
+      });
+    }
+    if (reqSendUsers.length > 0) {
+      return reqSendUsers;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 //Update this method to view the users whose the requests were received and complete challenge3.e
 async function viewPendingReqs(id) {
   let reqReceivedUsers = [];
-  return reqReceivedUsers;
+
+  try {
+    let requests = await knex_db.raw(
+      "SELECT id, sender_id FROM friends WHERE recipient_id = ? AND status = 'PENDING'",
+      [id]
+    );
+
+    for (const request of requests) {
+      const user = await userRepository.getUser(request.sender_id);
+      reqReceivedUsers.push({
+        id: user.id,
+        email: user.email,
+        gender: user.gender,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        image_url: user.image_url,
+        hobbies: user.hobbies,
+        skills: user.skills,
+        reqId: request.id,
+      });
+    }
+    if (reqReceivedUsers.length > 0) {
+      return reqReceivedUsers;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 //Update this method to complete the challenge3.f
 async function acceptReq(id) {
   return new Promise((resolve, reject) => {
     knex_db
-      .raw("UPDATE friends SET status = 'PENDING' WHERE id = ?", [1])
+      .raw("UPDATE friends SET status = 'ACCEPTED' WHERE id = ?", [id])
       .then(() => {
-        resolve("");
+        resolve("success");
       })
       .catch((error) => {
         reject(error);
@@ -101,9 +159,9 @@ async function rejectReq(id) {
           return;
         }
         knex_db
-          .raw("UPDATE friends SET status = 'PENDING' WHERE id = ?", [1])
+          .raw("DELETE FROM friends WHERE id = ?", [id])
           .then(() => {
-            resolve("");
+            resolve("Request deleted successfully!");
           })
           .catch((error) => {
             console.error(error);
