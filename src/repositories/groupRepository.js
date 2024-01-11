@@ -89,7 +89,9 @@ async function getUsersOfGroups(groupId) {
         ` SELECT 
         ut.id,
         ut.email,
-        ut.image_url 
+        ut.image_url,
+        ut.firstname,
+        ut.lastname
         FROM users ut
         LEFT JOIN userGroups ug
         ON ug.user_id=ut.id
