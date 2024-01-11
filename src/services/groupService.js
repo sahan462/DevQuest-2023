@@ -49,11 +49,15 @@ async function getUsersOfGroupsReq(groupId) {
 
 
 // Implement the method updateTaskReq(details, taskId) for challenge 13 here
-//
-//
-//
-//
-//
+async function updateTaskReq(details, taskId) {
+  try {
+    const response = await groupRepository.updateTask(details, taskId);
+    return { response: response, status: httpStatus.OK };
+  } catch (error) {
+    console.error(error);
+    return { response: error.message, status: httpStatus.INTERNAL_SERVER_ERROR };
+  }
+}
 
 async function getProjectByIdReq(projectId) {
   const response = await groupRepository.getProjectById(projectId);
@@ -61,18 +65,26 @@ async function getProjectByIdReq(projectId) {
 }
 
 // Implement the method updateProjectStatusReq(projectId, status) for challenge 14 here
-//
-//
-//
-//
-//
+async function updateProjectStatusReq(projectId, status) {
+  try {
+    const response = await groupRepository.updateProjectStatus(projectId, status);
+    return { response: response, status: httpStatus.OK };
+  } catch (error) {
+    console.error(error);
+    return { response: error.message, status: httpStatus.INTERNAL_SERVER_ERROR };
+  }
+}
 
 // Implement the method updateTaskStatusReq(taskId, status) for challenge 15 here
-//
-//
-//
-//
-//
+async function updateTaskStatusReq(taskId, status) {
+  try {
+    const response = await groupRepository.updateTaskStatus(taskId, status);
+    return { response: response, status: httpStatus.OK };
+  } catch (error) {
+    console.error(error);
+    return { response: error.message, status: httpStatus.INTERNAL_SERVER_ERROR };
+  }
+}
 
 async function addNewProjectReq(projectDetails) {
   const response = await groupRepository.addNewProject(projectDetails);
@@ -132,6 +144,11 @@ async function getGroupsFromUser(user_id) {
   }
 }
 
+async function updateProjectReq(details, projectId) {
+  const response = await groupRepository.updateProject(details, projectId);
+  return { response: response, status: httpStatus.OK };
+}
+
 initializeApp();
 
 export default {
@@ -147,5 +164,9 @@ export default {
   getGroupsFromKeyword,
   addNewGroup,
   addUserToGroup,
-  getGroupsFromUser
+  getGroupsFromUser,
+  updateProjectReq,
+  updateTaskReq,
+  updateProjectStatusReq,
+  updateTaskStatusReq
 };
