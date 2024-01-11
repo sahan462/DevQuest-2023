@@ -110,7 +110,22 @@ async function getUsersOfGroups(groupId) {
 
 // Implement this method body for challenge 10
 async function addNewProject(projectDetails) {
+  try {
+    await knex_db('projects').insert({
+      name: projectDetails.projectName,
+      description: projectDetails.projectDescription,
+      ownerId: projectDetails.userId,
+      createdDate: projectDetails.currentDate,
+      dueDate: projectDetails.endDate,
+      projectStatus: projectDetails.status,
+      groupId: projectDetails.selectedUserGroupId,
+    });
 
+    return 'success';
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 // Implement this method body for challenge 11
