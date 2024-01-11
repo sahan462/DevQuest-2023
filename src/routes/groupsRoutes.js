@@ -104,9 +104,14 @@ router.post('/addNewGroup', async (req, res) => {
 });
 
 router.post('/addUserIntoGroup', async (req, res) => {
-    const data = req.body;
-    const response = await groupService.addUserToGroup(data);
-    res.send(response);
+    try {
+        const data = req.body;
+        const response = await groupService.addUserToGroup(data);
+        res.status(response.status).send(response);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
 })
 
 export default router;

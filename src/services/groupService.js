@@ -111,14 +111,26 @@ async function addNewGroup(data) {
 }
 
 // Implement this method for Challenge 6
-// async function addUserToGroup(data) {
-
-// }
+async function addUserToGroup(data) {
+  try {
+    const response = await groupRepository.addUserToGroup(data);
+    return response;
+  } catch (error) {
+    console.error(error);
+    return { status: 500, message: 'Failed' };
+  }
+}
 
 // Implement this method for Challenge 6
-// async function getGroupsFromUser(user_id) {
-  
-// }
+async function getGroupsFromUser(user_id) {
+  try {
+    const groups = await groupRepository.getGroupsFromUser(user_id);
+    return { response: groups, status: httpStatus.OK };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 initializeApp();
 
@@ -133,5 +145,7 @@ export default {
   addNewProjectReq,
   addNewTaskReq,
   getGroupsFromKeyword,
-  addNewGroup
+  addNewGroup,
+  addUserToGroup,
+  getGroupsFromUser
 };
