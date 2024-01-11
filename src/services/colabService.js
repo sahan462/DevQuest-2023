@@ -25,12 +25,36 @@ async function getDocById(doc_id) {
 }
 
 // Implement this method for Challenge 7
-// async function getWhiteBoardDataByGroup(group_id) {
-// }
+async function getWhiteBoardDataByGroup(group_id) {
+    try {
+        const whiteboardData = await colabWhiteBoardRepository.getWhiteBoardDataByGroup(group_id);
+        const parsedResponse1 = JSON.parse(whiteboardData);
+
+        return {
+            response: whiteboardData, 
+            status: httpStatus.OK,
+        };
+
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 
 // Implement this method for Challenge 7
-// async function addWhiteBoardData(data) {
-// }
+async function addWhiteBoardData(data) {
+    const response = await colabWhiteBoardRepository.addWhiteBoardData(data);
+    if (response == undefined) {
+        return { status: httpStatus.NOT_FOUND };
+    } else if(response === "Updated Successfully!" || response === "Inserted Successfully!") {
+        return {text: 'Request successful. Operation completed.',status: httpStatus.OK };
+    } else {
+        return { status: httpStatus.INTERNAL_SERVER_ERROR };
+    }
+}
+
+
 
 // Implement this method for Challenge 8
 // async function addNewDoc(data) {
@@ -43,4 +67,6 @@ async function getDocById(doc_id) {
 export default {
     initializeApp,
     getDocById,
+    addWhiteBoardData,
+    getWhiteBoardDataByGroup
 };

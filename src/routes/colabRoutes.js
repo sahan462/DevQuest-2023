@@ -95,7 +95,7 @@ router.post('/download-doc/', async (req, res) => {
 
 router.get('/get-whiteboard/:groupId', async (req, res) => {
     let group_id = req.params.groupId;
-    let whiteboardData = await colabService.getWhiteBoardDataByGroup(group_id);
+    let whiteboardData = await ColabService.getWhiteBoardDataByGroup(group_id);
     res.json(whiteboardData);
 });
 
