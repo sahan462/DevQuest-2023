@@ -176,20 +176,49 @@ async function rejectReq(id) {
 
 async function cancelReq(id) {
   return new Promise((resolve, reject) => {
-    resolve("Request cancelled successfully!");
+    knex_db
+      .raw("SELECT status FROM friends WHERE id = ?", [id])
+      .then((result) => {
+        if (result[0].status === "PENDING") {
+          knex_db
+            .raw("DELETE FROM friends WHERE id = ?", [id])
+            .then(() => {
+              resolve("Request cancelled successfully!");
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } else {
+          resolve("Request not found!");
+        }
+      });
   });
 }
 
 async function removeFriend(id) {
   return new Promise((resolve, reject) => {
-    resolve("Friend removed successfully!");
+    knex_db
+      .raw("SELECT status FROM friends WHERE id = ?", [id])
+      .then((result) => {
+        if (result[0].status === "ACCEPTED") {
+          knex_db
+            .raw("DELETE FROM friends WHERE id = ?", [id])
+            .then(() => {
+              resolve("Friend removed successfully!");
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } else {
+          resolve("Friend not found!");
+        }
+      });
   });
 }
 
 //Update this method to complete the challenge4.a
 async function viewFriends(id) {
-  
-    try {
+  try {
     const friendsData = await knex_db.raw(
       `
       SELECT u.id, f.id AS reqId
