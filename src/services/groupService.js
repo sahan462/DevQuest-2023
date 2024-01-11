@@ -132,6 +132,11 @@ async function getGroupsFromUser(user_id) {
   }
 }
 
+async function updateProjectReq(details, projectId) {
+  const response = await groupRepository.updateProject(details, projectId);
+  return { response: response, status: httpStatus.OK };
+}
+
 initializeApp();
 
 export default {
@@ -147,5 +152,6 @@ export default {
   getGroupsFromKeyword,
   addNewGroup,
   addUserToGroup,
-  getGroupsFromUser
+  getGroupsFromUser,
+  updateProjectReq
 };
