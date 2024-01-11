@@ -180,14 +180,7 @@ async function cancelReq(id) {
     try {
       const result = await knex_db.raw("SELECT * FROM friends WHERE id = ? AND status = 'PENDING'", [id]);
       if(result.length > 0) {
-    knex_db
-      .raw("SELECT status FROM friends WHERE id = ?", [id])
-      .then((result) => {
-        if (result[0].status === "PENDING") {
-          knex_db
-            .raw("DELETE FROM friends WHERE id = ?", [id])
-            .then(() => {
-                  await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
+        await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
         return "Request cancelled successfully!";
       }else{
         return "Request not found!";
@@ -195,14 +188,6 @@ async function cancelReq(id) {
 
     } catch (error) {
       console.error(error);
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        } else {
-          resolve("Request not found!");
-        }
-      });
       throw error;
     }
 }
@@ -212,14 +197,7 @@ async function removeFriend(id) {
     try {
       const result = await knex_db.raw("SELECT * FROM friends WHERE id = ?", [id]);
       if(result.length > 0){
-    knex_db
-      .raw("SELECT status FROM friends WHERE id = ?", [id])
-      .then((result) => {
-        if (result[0].status === "ACCEPTED") {
-          knex_db
-            .raw("DELETE FROM friends WHERE id = ?", [id])
-            .then(() => {
-                  await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
+        await knex_db.raw('DELETE FROM friends WHERE id = ?', [id]);
         return "Friend removed successfully!";
       }else{
         return "Friend not found!";
@@ -227,14 +205,6 @@ async function removeFriend(id) {
 
     } catch (error) {
       console.error(error);
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        } else {
-          resolve("Friend not found!");
-        }
-      });
       throw error;
     }
 
