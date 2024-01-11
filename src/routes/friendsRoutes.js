@@ -33,11 +33,11 @@ router.post("/request", async (req, res) => {
   if (response == HttpStatus.BAD_REQUEST) {
     res
       .status(HttpStatus.BAD_REQUEST)
-      .json({ message: "" });
+      .json({ message: "Request already sent!" });
   } else if (response == HttpStatus.FORBIDDEN) {
     res
       .status(HttpStatus.FORBIDDEN)
-      .json({ message: "" });
+      .json({ message: "Request already received!" });
   } else {
     res
       .status(HttpStatus.OK)

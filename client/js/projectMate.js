@@ -49,9 +49,11 @@ async function getUserGroups(userId) {
     const result = await response.json();
     userGroups = result.response;
     if (userGroups.length == 0) {
-      document.getElementById("welcome-footer").innerText = "Oops! You have to join a group from Colab Hub first to work in projects!";
+      document.getElementById("welcome-footer").innerText =
+        "Oops! You have to join a group from Colab Hub first to work in projects!";
     } else {
-      document.getElementById("welcome-footer").innerText = "Select a group from the navigation bar on the left";
+      document.getElementById("welcome-footer").innerText =
+        "Select a group from the navigation bar on the left";
     }
     renderUserGroups(userGroups);
   } catch (error) {
@@ -667,7 +669,8 @@ function renderProjectDetails(project, tasks, users, selectedTask) {
     document.getElementById("startDate").innerText = project.createdDate;
     document.getElementById("endDate").innerText = project.dueDate;
     document.getElementById("saveProjectButton").style.display = "none";
-    document.getElementById("editProject").style.display = projectOwner.id == userId ? "block" : "none";
+    document.getElementById("editProject").style.display =
+      projectOwner.id == userId ? "block" : "none";
     document
       .getElementById("editProjectButton")
       .addEventListener("click", function (event) {
