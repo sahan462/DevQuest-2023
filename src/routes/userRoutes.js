@@ -8,7 +8,7 @@ router.get("/:id", async (req, res) => {
   const response = await userService.getUser(id);
 
   if (response.status == HttpStatus.NOT_FOUND) {
-    res.status(response.status).json({ message: "" });
+    res.status(response.status).json({ message: "User Not Found!" });
   } else {
     res.status(response.status).json(response);
   }
