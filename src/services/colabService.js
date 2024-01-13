@@ -57,6 +57,5 @@ async function getWhiteBoardDataByGroup(group_id) {
 export default {
     initializeApp,
     getDocById,
-    addWhiteBoardData,
     getWhiteBoardDataByGroup
 };
